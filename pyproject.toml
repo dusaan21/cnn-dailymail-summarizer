@@ -1,0 +1,32 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "cnn_dailymail_news_text_summarizer"
+version = "0.0.1"
+description = "Text summarization project using transformers on CNN/DailyMail dataset"
+authors = [
+  { name = "dusaan21" },
+]
+
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    
+]
+requires-python = "~=3.10.7"
+
+[tool.black]
+line-length = 99
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.venv
+)/
+'''
+
+[tool.ruff.lint.isort]
+known_first_party = ["cnn_dailymail_news_text_summarizer"]
+force_sort_within_sections = true
