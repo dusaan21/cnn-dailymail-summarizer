@@ -1,29 +1,21 @@
 from pathlib import Path
-
-import typer
-from loguru import logger
-from tqdm import tqdm
-
-from cnn_dailymail_news_text_summarizer.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
-
-app = typer.Typer()
+import pandas as pd
 
 
-@app.command()
-def main(
-    # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
-    input_path: Path = RAW_DATA_DIR / "dataset.csv",
-    output_path: Path = PROCESSED_DATA_DIR / "dataset.csv",
-    # ----------------------------------------------
-):
-    # ---- REPLACE THIS WITH YOUR OWN CODE ----
-    logger.info("Processing dataset...")
-    for i in tqdm(range(10), total=10):
-        if i == 5:
-            logger.info("Something happened for iteration 5.")
-    logger.success("Processing dataset complete.")
-    # -----------------------------------------
+def load_data(file_path):
+    return pd.read_csv(file_path)
 
+def load_datasets(train_path, test_path, val_path):
+    train_data = load_data(train_path)
+    test_data = load_data(test_path)
+    val_data = load_data(val_path)
+    return train_data, test_data, val_data
+    
 
 if __name__ == "__main__":
-    app()
+    train_path = Path('data/raw/cnn_dailymail/train.csv')
+    test_path = Path('data/raw/cnn_dailymail/test.csv')
+    val_path = Path('data/raw/cnn_dailymail/validation.csv')
+    train_data, test_data, val_data = load_datasets(train_path, test_path, val_path)
+
+
