@@ -16,3 +16,8 @@ tqdm
 typer
 -e .
 nltk
+transformers
+torch
+datasets
+evaluate
+rouge-score
