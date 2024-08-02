@@ -21,3 +21,4 @@ torch
 datasets
 evaluate
 rouge-score
+accelerate
