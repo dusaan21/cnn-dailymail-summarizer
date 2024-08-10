@@ -1,7 +1,7 @@
 import numpy as np
 from transformers import AutoModelForSeq2SeqLM, Seq2SeqTrainer
 
-def compute_metrics(eval_pred):
+def compute_metrics(eval_pred, tokenizer, rouge):
     predictions, labels = eval_pred
     decoded_preds = tokenizer.batch_decode(predictions, skip_special_tokens=True)
     labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
@@ -14,7 +14,7 @@ def compute_metrics(eval_pred):
 
     return {k: round(v, 4) for k, v in result.items()}
 
-def train_model(train_data, val_data, tokenizer, data_collator, training_args, device, model_name="facebook/bart-base"):
+def train_model(train_data, val_data, tokenizer, data_collator, training_args, device, rouge, checkpoint=False, model_name="facebook/bart-base"):
     model = AutoModelForSeq2SeqLM.from_pretrained(model_name, device_map=device)
     model.gradient_checkpointing_enable()
     trainer = Seq2SeqTrainer(
@@ -24,7 +24,10 @@ def train_model(train_data, val_data, tokenizer, data_collator, training_args, d
         eval_dataset=val_data,
         data_collator=data_collator,
         tokenizer=tokenizer,
-        compute_metrics=compute_metrics
+        compute_metrics=lambda eval_pred: compute_metrics(eval_pred, tokenizer, rouge)
     )
-    trainer.train()
+    if checkpoint is False:
+        trainer.train()
+    else:
+        trainer.train(resume_from_checkpoint=True)
     #trainer.save_model('./model')
